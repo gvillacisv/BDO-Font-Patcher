@@ -93,32 +93,39 @@ internal static class BdoPathDetector
                         using var appKey = uninstallKey.OpenSubKey(subKeyName, false);
                         if (appKey == null) continue;
 
-                        string? displayName = appKey.GetValue("DisplayName") as string;
-                        if (string.IsNullOrEmpty(displayName)) continue;
+                        bool isBdo = false;
 
-                        // Match "Black Desert", "Black Desert Online", "BlackDesert", etc.
-                        if (!displayName.Contains("Black Desert", StringComparison.OrdinalIgnoreCase) &&
-                            !displayName.Contains("BlackDesert", StringComparison.OrdinalIgnoreCase))
-                            continue;
+                        // Priority: match subkey name "BlackDesert_*" (consistent across all regions)
+                        if (subKeyName.StartsWith("BlackDesert_", StringComparison.OrdinalIgnoreCase))
+                            isBdo = true;
 
-                        // Try DisplayIcon first (most reliable: points to BlackDesertLauncher.exe)
-                        string? iconPath = appKey.GetValue("DisplayIcon") as string;
-                        if (!string.IsNullOrEmpty(iconPath))
+                        // Fallback: match DisplayName containing "Black Desert"
+                        if (!isBdo)
                         {
-                            // DisplayIcon may be: "E:\games\pa\BlackDesert\BlackDesertLauncher.exe"
-                            string? dir = Path.GetDirectoryName(iconPath);
-                            if (!string.IsNullOrEmpty(dir) && IsValidBdoPath(dir) && !paths.Contains(dir))
-                            {
-                                paths.Add(dir);
-                                continue; // Found via icon, skip InstallLocation
-                            }
+                            string? displayName = appKey.GetValue("DisplayName") as string;
+                            if (!string.IsNullOrEmpty(displayName) &&
+                                (displayName.Contains("Black Desert", StringComparison.OrdinalIgnoreCase) ||
+                                 displayName.Contains("BlackDesert", StringComparison.OrdinalIgnoreCase)))
+                                isBdo = true;
                         }
 
-                        // Fallback to InstallLocation
+                        if (!isBdo) continue;
+
+                        // Try InstallLocation first (Inno Setup entries always have this)
                         string? installLoc = appKey.GetValue("InstallLocation") as string;
                         if (!string.IsNullOrEmpty(installLoc) && IsValidBdoPath(installLoc) && !paths.Contains(installLoc))
                         {
                             paths.Add(installLoc);
+                            continue;
+                        }
+
+                        // Fallback: derive path from DisplayIcon
+                        string? iconPath = appKey.GetValue("DisplayIcon") as string;
+                        if (!string.IsNullOrEmpty(iconPath))
+                        {
+                            string? dir = Path.GetDirectoryName(iconPath);
+                            if (!string.IsNullOrEmpty(dir) && IsValidBdoPath(dir) && !paths.Contains(dir))
+                                paths.Add(dir);
                         }
                     }
                     catch (Exception)
