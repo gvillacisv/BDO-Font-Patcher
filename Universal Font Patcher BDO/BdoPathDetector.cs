@@ -5,34 +5,27 @@ namespace Universal_Font_Patcher_BDO;
 
 internal static class BdoPathDetector
 {
-    private static readonly string[] UninstallRoots =
-    {
-        @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
-        @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
-    };
+    private const string UninstallRoot = @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall";
 
     /// <summary>
-    /// Detects BDO installations by scanning Windows Uninstall registry entries
-    /// whose subkey name starts with "BlackDesert_" (e.g., BlackDesert_NA_is1,
-    /// BlackDesert_SA_is1, BlackDesert_EU_is1) or whose DisplayName contains
-    /// "Black Desert". Returns all valid installation paths found.
+    /// Detects BDO standalone installations by scanning 32-bit Windows Uninstall
+    /// registry entries whose subkey name starts with "BlackDesert_" (e.g.,
+    /// BlackDesert_NA_is1, BlackDesert_SA_is1, BlackDesert_EU_is1) or whose
+    /// DisplayName contains "Black Desert".
+    /// Only scans Wow6432Node to avoid Steam game entries.
     /// </summary>
     public static List<string> DetectAll()
     {
         var paths = new List<string>();
 
-        foreach (string root in UninstallRoots)
+        try
         {
-            try
-            {
-                using var uninstallKey = Registry.LocalMachine.OpenSubKey(root, false);
-                if (uninstallKey == null) continue;
-
+            using var uninstallKey = Registry.LocalMachine.OpenSubKey(UninstallRoot, false);
+            if (uninstallKey != null)
                 ScanUninstallSubKeys(uninstallKey, paths);
-            }
-            catch (SecurityException) { }
-            catch (UnauthorizedAccessException) { }
         }
+        catch (SecurityException) { }
+        catch (UnauthorizedAccessException) { }
 
         return paths;
     }
