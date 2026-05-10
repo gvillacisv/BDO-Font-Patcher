@@ -23,7 +23,6 @@ Simple, clean, and easy to use font patcher for **Black Desert Online**. Replace
 ### Quick build (CLI)
 
 ```bash
-# Restore dependencies (not needed — zero NuGet packages)
 # Build
 dotnet build -c Release
 
@@ -33,10 +32,11 @@ dotnet run -c Release
 
 ### Single-file publish (standalone EXE)
 
+Use this only when you want to distribute the app as a single `.exe`:
+
 ```bash
 dotnet publish -c Release -r win-x64 --self-contained true ^
-  -p:PublishSingleFile=true ^
-  -p:IncludeNativeLibrariesForSelfExtract=true
+  -p:PublishSingleFile=true
 
 # Output: bin\Release\net8.0-windows\win-x64\publish\Universal Font Patcher BDO.exe
 ```
