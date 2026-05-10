@@ -18,17 +18,10 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: Restore
-        run: dotnet restore
-
-      - name: Build
-        run: dotnet build -c Release --no-restore
-
       - name: Publish single-file EXE
         run: |
           dotnet publish -c Release -r win-x64 --self-contained true `
-            -p:PublishSingleFile=true `
-            -p:DebugType=embedded --no-build
+            -p:PublishSingleFile=true
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
