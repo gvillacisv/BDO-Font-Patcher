@@ -5,81 +5,19 @@ namespace Universal_Font_Patcher_BDO;
 
 internal static class BdoPathDetector
 {
-    private const string BdoRegistryKey64 = @"SOFTWARE\Wow6432Node\BlackDesert_ID";
-    private const string BdoRegistryKey32 = @"SOFTWARE\BlackDesert_ID";
-    private const string BdoRegistryValueName = "Path";
-
-    private const string SteamRegistryKey = @"SOFTWARE\WOW6432Node\Valve\Steam";
-    private const string SteamInstallPathValue = "InstallPath";
-
     private static readonly string[] UninstallRoots =
     {
         @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
         @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
     };
 
+    /// <summary>
+    /// Detects BDO installations by scanning Windows Uninstall registry entries
+    /// whose subkey name starts with "BlackDesert_" (e.g., BlackDesert_NA_is1,
+    /// BlackDesert_SA_is1, BlackDesert_EU_is1) or whose DisplayName contains
+    /// "Black Desert". Returns all valid installation paths found.
+    /// </summary>
     public static List<string> DetectAll()
-    {
-        var results = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (var path in DetectFromRegistry())
-            results.Add(path);
-
-        foreach (var path in DetectFromUninstall())
-            results.Add(path);
-
-        foreach (var path in DetectFromSteam())
-            results.Add(path);
-
-        return results.ToList();
-    }
-
-    /// <summary>
-    /// Detection 1: BlackDesert_ID registry key (official BDO installer).
-    /// </summary>
-    private static List<string> DetectFromRegistry()
-    {
-        var paths = new List<string>();
-
-        // Try 64-bit view first
-        string? path = TryReadRegistryPath(Registry.LocalMachine, BdoRegistryKey64);
-        if (!string.IsNullOrEmpty(path))
-            paths.Add(path);
-
-        // Fallback to 32-bit view
-        path = TryReadRegistryPath(Registry.LocalMachine, BdoRegistryKey32);
-        if (!string.IsNullOrEmpty(path) && !paths.Contains(path))
-            paths.Add(path);
-
-        return paths;
-    }
-
-    private static string? TryReadRegistryPath(RegistryKey baseKey, string subKeyPath)
-    {
-        try
-        {
-            using var subKey = baseKey.OpenSubKey(subKeyPath, false);
-            return subKey?.GetValue(BdoRegistryValueName) as string;
-        }
-        catch (SecurityException)
-        {
-            return null;
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return null;
-        }
-        catch (ObjectDisposedException)
-        {
-            return null;
-        }
-    }
-
-    /// <summary>
-    /// Detection 2: Windows Uninstall registry entries for "Black Desert".
-    /// Covers both old Daum and new Pearl Abyss installers.
-    /// </summary>
-    private static List<string> DetectFromUninstall()
     {
         var paths = new List<string>();
 
@@ -99,11 +37,11 @@ internal static class BdoPathDetector
 
                         bool isBdo = false;
 
-                        // Priority: match subkey name "BlackDesert_*" (consistent across all regions)
+                        // Priority: subkey named "BlackDesert_*" (NA, SA, EU, etc.)
                         if (subKeyName.StartsWith("BlackDesert_", StringComparison.OrdinalIgnoreCase))
                             isBdo = true;
 
-                        // Fallback: match DisplayName containing "Black Desert"
+                        // Fallback: DisplayName contains "Black Desert"
                         if (!isBdo)
                         {
                             string? displayName = appKey.GetValue("DisplayName") as string;
@@ -115,7 +53,7 @@ internal static class BdoPathDetector
 
                         if (!isBdo) continue;
 
-                        // Try InstallLocation first (Inno Setup entries always have this)
+                        // Read InstallLocation (Inno Setup entries always have this)
                         string? installLoc = appKey.GetValue("InstallLocation") as string;
                         if (!string.IsNullOrEmpty(installLoc) && IsValidBdoPath(installLoc) && !paths.Contains(installLoc))
                         {
@@ -132,129 +70,15 @@ internal static class BdoPathDetector
                                 paths.Add(dir);
                         }
                     }
-                    catch (SecurityException)
-                    {
-                        // Skip individual uninstall entries that can't be read
-                    }
-                    catch (UnauthorizedAccessException)
-                    {
-                        // Skip individual uninstall entries that can't be read
-                    }
+                    catch (SecurityException) { }
+                    catch (UnauthorizedAccessException) { }
                 }
             }
-            catch (SecurityException)
-            {
-                // Skip uninstall root if inaccessible
-            }
-            catch (UnauthorizedAccessException)
-            {
-                // Skip uninstall root if inaccessible
-            }
+            catch (SecurityException) { }
+            catch (UnauthorizedAccessException) { }
         }
 
         return paths;
-    }
-
-    /// <summary>
-    /// Detection 3: Steam libraries — scan steamapps/common/ for BDO installations.
-    /// </summary>
-    private static List<string> DetectFromSteam()
-    {
-        var paths = new List<string>();
-
-        try
-        {
-            string? steamPath = GetSteamInstallPath();
-            if (string.IsNullOrEmpty(steamPath) || !Directory.Exists(steamPath))
-                return paths;
-
-            var libraryRoots = GetSteamLibraryRoots(steamPath);
-
-            foreach (var libRoot in libraryRoots)
-            {
-                string commonDir = Path.Combine(libRoot, "steamapps", "common");
-                if (!Directory.Exists(commonDir))
-                    continue;
-
-                foreach (string subDir in Directory.EnumerateDirectories(commonDir))
-                {
-                    if (IsValidBdoPath(subDir) && !paths.Contains(subDir))
-                        paths.Add(subDir);
-                }
-            }
-        }
-        catch (IOException)
-        {
-            // Steam not installed or inaccessible
-        }
-        catch (UnauthorizedAccessException)
-        {
-            // Steam not installed or inaccessible
-        }
-        catch (DirectoryNotFoundException)
-        {
-            // Steam not installed or inaccessible
-        }
-
-        return paths;
-    }
-
-    private static string? GetSteamInstallPath()
-    {
-        try
-        {
-            using var steamKey = Registry.LocalMachine.OpenSubKey(SteamRegistryKey, false);
-            return steamKey?.GetValue(SteamInstallPathValue) as string;
-        }
-        catch (SecurityException)
-        {
-            return null;
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return null;
-        }
-    }
-
-    private static List<string> GetSteamLibraryRoots(string primarySteamPath)
-    {
-        var roots = new List<string> { primarySteamPath };
-
-        string vdfPath = Path.Combine(primarySteamPath, "steamapps", "libraryfolders.vdf");
-        if (!File.Exists(vdfPath))
-            return roots;
-
-        try
-        {
-            foreach (var line in File.ReadLines(vdfPath))
-            {
-                string trimmed = line.Trim();
-                if (trimmed.StartsWith("\"path\"", StringComparison.OrdinalIgnoreCase))
-                {
-                    int firstQuote = trimmed.IndexOf('"');
-                    int secondQuote = trimmed.IndexOf('"', firstQuote + 1);
-                    if (firstQuote >= 0 && secondQuote > firstQuote)
-                    {
-                        string libPath = trimmed.Substring(firstQuote + 1, secondQuote - firstQuote - 1);
-                        if (Directory.Exists(libPath) &&
-                            !roots.Contains(libPath, StringComparer.OrdinalIgnoreCase))
-                        {
-                            roots.Add(libPath);
-                        }
-                    }
-                }
-            }
-        }
-        catch (IOException)
-        {
-            // Corrupt libraryfolders.vdf — skip
-        }
-        catch (UnauthorizedAccessException)
-        {
-            // Corrupt libraryfolders.vdf — skip
-        }
-
-        return roots;
     }
 
     public static bool IsValidBdoPath(string? path)

@@ -31,10 +31,7 @@ public partial class Form1 : Form
             foreach (var path in paths)
             {
                 var cb = new CheckBox();
-                string displayName = path.Contains("Steam", StringComparison.OrdinalIgnoreCase)
-                    ? "Steam"
-                    : "Standalone";
-                cb.Text = $"{displayName}: {path}";
+                cb.Text = path;
                 cb.Tag = path;
                 cb.ForeColor = Color.White;
                 cb.BackColor = Color.Transparent;
