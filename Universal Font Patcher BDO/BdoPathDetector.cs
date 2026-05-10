@@ -12,11 +12,20 @@ internal static class BdoPathDetector
     private const string SteamRegistryKey = @"SOFTWARE\WOW6432Node\Valve\Steam";
     private const string SteamInstallPathValue = "InstallPath";
 
+    private static readonly string[] UninstallRoots =
+    {
+        @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+        @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+    };
+
     public static List<string> DetectAll()
     {
         var results = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var path in DetectFromRegistry())
+            results.Add(path);
+
+        foreach (var path in DetectFromUninstall())
             results.Add(path);
 
         foreach (var path in DetectFromSteam())
@@ -25,6 +34,9 @@ internal static class BdoPathDetector
         return results.ToList();
     }
 
+    /// <summary>
+    /// Detection 1: BlackDesert_ID registry key (official BDO installer).
+    /// </summary>
     private static List<string> DetectFromRegistry()
     {
         var paths = new List<string>();
@@ -51,31 +63,94 @@ internal static class BdoPathDetector
         }
         catch (SecurityException)
         {
-            // Insufficient permissions — skip silently
             return null;
         }
         catch (SystemException)
         {
-            // Key not found or other registry error — skip silently
             return null;
         }
     }
 
+    /// <summary>
+    /// Detection 2: Windows Uninstall registry entries for "Black Desert".
+    /// Covers both old Daum and new Pearl Abyss installers.
+    /// </summary>
+    private static List<string> DetectFromUninstall()
+    {
+        var paths = new List<string>();
+
+        foreach (string root in UninstallRoots)
+        {
+            try
+            {
+                using var uninstallKey = Registry.LocalMachine.OpenSubKey(root, false);
+                if (uninstallKey == null) continue;
+
+                foreach (string subKeyName in uninstallKey.GetSubKeyNames())
+                {
+                    try
+                    {
+                        using var appKey = uninstallKey.OpenSubKey(subKeyName, false);
+                        if (appKey == null) continue;
+
+                        string? displayName = appKey.GetValue("DisplayName") as string;
+                        if (string.IsNullOrEmpty(displayName)) continue;
+
+                        // Match "Black Desert", "Black Desert Online", "BlackDesert", etc.
+                        if (!displayName.Contains("Black Desert", StringComparison.OrdinalIgnoreCase) &&
+                            !displayName.Contains("BlackDesert", StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        // Try DisplayIcon first (most reliable: points to BlackDesertLauncher.exe)
+                        string? iconPath = appKey.GetValue("DisplayIcon") as string;
+                        if (!string.IsNullOrEmpty(iconPath))
+                        {
+                            // DisplayIcon may be: "E:\games\pa\BlackDesert\BlackDesertLauncher.exe"
+                            string? dir = Path.GetDirectoryName(iconPath);
+                            if (!string.IsNullOrEmpty(dir) && IsValidBdoPath(dir) && !paths.Contains(dir))
+                            {
+                                paths.Add(dir);
+                                continue; // Found via icon, skip InstallLocation
+                            }
+                        }
+
+                        // Fallback to InstallLocation
+                        string? installLoc = appKey.GetValue("InstallLocation") as string;
+                        if (!string.IsNullOrEmpty(installLoc) && IsValidBdoPath(installLoc) && !paths.Contains(installLoc))
+                        {
+                            paths.Add(installLoc);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // Skip individual uninstall entries that can't be read
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Skip uninstall root if inaccessible
+            }
+        }
+
+        return paths;
+    }
+
+    /// <summary>
+    /// Detection 3: Steam libraries — scan steamapps/common/ for BDO installations.
+    /// </summary>
     private static List<string> DetectFromSteam()
     {
         var paths = new List<string>();
 
         try
         {
-            // Get Steam install path from registry
             string? steamPath = GetSteamInstallPath();
             if (string.IsNullOrEmpty(steamPath) || !Directory.Exists(steamPath))
                 return paths;
 
-            // Collect all Steam library roots (primary + secondary from libraryfolders.vdf)
             var libraryRoots = GetSteamLibraryRoots(steamPath);
 
-            // Scan each library's steamapps/common/ for BDO installations
             foreach (var libRoot in libraryRoots)
             {
                 string commonDir = Path.Combine(libRoot, "steamapps", "common");
@@ -91,7 +166,7 @@ internal static class BdoPathDetector
         }
         catch (Exception)
         {
-            // Steam not installed or inaccessible — skip silently
+            // Steam not installed or inaccessible
         }
 
         return paths;
@@ -141,7 +216,7 @@ internal static class BdoPathDetector
         }
         catch (Exception)
         {
-            // Corrupt libraryfolders.vdf — skip, primary path already added
+            // Corrupt libraryfolders.vdf — skip
         }
 
         return roots;
@@ -152,17 +227,14 @@ internal static class BdoPathDetector
         if (string.IsNullOrWhiteSpace(path))
             return false;
 
-        // Trim trailing whitespace and resolve any malformed path components
         path = path.TrimEnd();
 
-        // Reject paths with invalid characters (e.g., a literal null char)
         if (path.IndexOf('\0') >= 0)
             return false;
 
         if (!Directory.Exists(path))
             return false;
 
-        // Must contain BlackDesertLauncher.exe OR prestringtable subdirectory
         string launcherPath = Path.Combine(path, "BlackDesertLauncher.exe");
         string prestringPath = Path.Combine(path, "prestringtable");
 
