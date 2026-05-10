@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers Condition="'$(DesignTimeBuild)' != 'true'">win-x64</RuntimeIdentifiers>
     <RootNamespace>Universal_Font_Patcher_BDO</RootNamespace>
     <AssemblyName>Universal Font Patcher BDO</AssemblyName>
     <ApplicationIcon>layers_78965.ico</ApplicationIcon>
