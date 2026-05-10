@@ -94,9 +94,6 @@ internal static class BdoPathDetector
         if (!Directory.Exists(path))
             return false;
 
-        string launcherPath = Path.Combine(path, "BlackDesertLauncher.exe");
-        string prestringPath = Path.Combine(path, "prestringtable");
-
-        return File.Exists(launcherPath) || Directory.Exists(prestringPath);
+        return File.Exists(Path.Combine(path, "BlackDesertLauncher.exe"));
     }
 }
