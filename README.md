@@ -41,6 +41,23 @@ dotnet publish -c Release -r win-x64 --self-contained true ^
 # Output: bin\Release\net8.0-windows\win-x64\publish\Universal Font Patcher BDO.exe
 ```
 
+## Creating a GitHub Release
+
+The repository includes a GitHub Actions workflow that automatically builds and publishes releases. To create a release:
+
+```bash
+# Tag with a version number and push
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+This triggers the workflow to:
+1. Build the project on a Windows runner
+2. Generate the single-file EXE
+3. Create a GitHub Release with the EXE attached
+
+Update `RELEASE_NOTES.md` before tagging to customize the release notes.
+
 The EXE is fully self-contained — no external DLLs or .NET runtime required.
 
 ## Usage
