@@ -1,5 +1,157 @@
 # Apply Progress: migrate-to-dotnet-moderno
 
+## PR 4: Code Modernization (net8.0-windows)
+
+**Status**: COMPLETE (tasks 4.1-4.4 implemented, 4.5 pending verification)
+
+### Completed Tasks
+
+| Task | Status | Details |
+|------|--------|---------|
+| 4.1 | ✅ Complete | Enabled `<ImplicitUsings>enable</ImplicitUsings>` in .csproj |
+| 4.2 | ✅ Complete | Enabled `<Nullable>enable</Nullable>` in .csproj |
+| 4.3 | ✅ Complete | Converted Patcher.cs to file-scoped namespace, kept only `System.Drawing` and `System.Media` usings |
+| 4.4 | ✅ Complete | Converted Patcher.Designer.cs to file-scoped namespace, added `= null!;` to all 11 control fields |
+| 4.5 | ⏳ Pending | Verify: `dotnet build` succeeds with nullable warnings resolved (requires Windows machine) |
+
+### Files Changed
+
+| File | Action | What Was Done |
+|------|--------|---------------|
+| `Universal Font Patcher BDO/Universal Font Patcher BDO.csproj` | Modified | Changed `ImplicitUsings` from `disable` to `enable`, `Nullable` from `disable` to `enable` |
+| `Universal Font Patcher BDO/Patcher.cs` | Modified | Converted to file-scoped namespace `namespace Universal_Font_Patcher_BDO;`, removed 11 using statements, kept only `using System.Drawing;` and `using System.Media;` (required for WinForms and SoundPlayer) |
+| `Universal Font Patcher BDO/Patcher.Designer.cs` | Modified | Converted to file-scoped namespace, removed all using statements, added `= null!;` to all 11 control field declarations (gunaLabel1-3, BtnContinue, BtnExit, BtnSelectFont, BtnSelectGameFolder, TxtFontPath, TxtGamePath, folderBrowserDialog1) |
+| `Universal Font Patcher BDO/Program.cs` | Modified | Converted to file-scoped namespace, removed all 5 using statements (implicitly included via net8.0-windows) |
+
+### Diff: .csproj (PR 4)
+
+**Before:**
+```xml
+<ImplicitUsings>disable</ImplicitUsings>
+<Nullable>disable</Nullable>
+```
+
+**After:**
+```xml
+<ImplicitUsings>enable</ImplicitUsings>
+<Nullable>enable</Nullable>
+```
+
+### Diff: Patcher.cs (PR 4)
+
+**Before:**
+```csharp
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Media;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Windows.Forms;
+using System.IO;
+
+namespace Universal_Font_Patcher_BDO
+{
+    public partial class Form1 : Form
+    {
+```
+
+**After:**
+```csharp
+using System.Drawing;
+using System.Media;
+
+namespace Universal_Font_Patcher_BDO;
+
+public partial class Form1 : Form
+{
+```
+
+### Diff: Patcher.Designer.cs (PR 4)
+
+**Before:**
+```csharp
+namespace Universal_Font_Patcher_BDO
+{
+    partial class Form1
+    {
+        // ... field declarations
+        private System.Windows.Forms.Label gunaLabel1;
+        private System.Windows.Forms.Panel gunaPanel1;
+        // ...
+    }
+}
+```
+
+**After:**
+```csharp
+namespace Universal_Font_Patcher_BDO;
+
+partial class Form1
+{
+        // ... field declarations
+        private System.Windows.Forms.Label gunaLabel1 = null!;
+        private System.Windows.Forms.Panel gunaPanel1 = null!;
+        // ...
+    }
+```
+
+### Diff: Program.cs (PR 4)
+
+**Before:**
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Universal_Font_Patcher_BDO
+{
+    internal static class Program
+    {
+```
+
+**After:**
+```csharp
+namespace Universal_Font_Patcher_BDO;
+
+internal static class Program
+{
+```
+
+### Key Design Decisions Applied
+
+1. **Explicit usings retained**: Kept `System.Drawing` and `System.Media` in Patcher.cs as they are NOT in implicit usings for `net8.0-windows` with `UseWindowsForms`
+2. **Nullable field handling**: Used `= null!;` pattern for Designer.cs control fields — these are initialized in `InitializeComponent()` at runtime but compiler doesn't recognize this
+3. **No pattern matching**: Skipped as per design — minimal benefit for this codebase size
+
+### What Stays Same (PR 4)
+
+- `Properties/AssemblyInfo.cs` — not modified (using statements already minimal, GuidAttribute still works)
+- `Properties/Resources.*`, `Properties/Settings.*` — unchanged
+- `Patcher.resx`, `Resources/*` — unchanged
+
+### Deviations from Design
+
+- None — implementation matches design exactly.
+
+### Issues Found
+
+- None for the implementation itself.
+- Build verification blocked by Linux environment (cannot compile net8.0-windows on Linux).
+
+### Remaining Tasks
+
+- [ ] 4.5 Verify: `dotnet build` succeeds on net8.0-windows with nullable warnings resolved (requires Windows machine)
+
+---
+
 ## PR 1: SDK-style .csproj + PackageReference (net472)
 
 **Status**: COMPLETE (tasks 1.1-1.6 complete, 1.7 pending verification)
@@ -222,10 +374,18 @@
 **PR 1 progress**: 6/7 tasks complete (1.7 pending verification on Windows)
 **PR 2 progress**: 12/14 tasks complete (2.13-2.14 pending verification on Windows)
 **PR 3 progress**: 6/8 tasks complete (3.7-3.8 pending verification on Windows)
+**PR 4 progress**: 4/5 tasks complete (4.5 pending verification on Windows)
 
 **PR 3 changes**:
 - `.csproj`: Full replacement (64 lines → 17 lines), net8.0-windows, UseWindowsForms, RuntimeIdentifier, SelfContained, zero NuGet packages
 - `FodyWeavers.xml`: Deleted
 - `App.config`: Deleted
 
+**PR 4 changes** (Code Modernization):
+- `.csproj`: Enabled `ImplicitUsings` and `Nullable`
+- `Patcher.cs`: File-scoped namespace, reduced from 13 usings to 2 (System.Drawing, System.Media)
+- `Patcher.Designer.cs`: File-scoped namespace, added `= null!;` to 11 control fields
+- `Program.cs`: File-scoped namespace, removed all 5 explicit usings
+
 **What stays the same** (PR 3): Patcher.cs, Patcher.Designer.cs, Program.cs, Properties/*, Patcher.resx, Resources/*, layers_78965.ico
+**What stays the same** (PR 4): Properties/AssemblyInfo.cs, Properties/Resources.*, Properties/Settings.*

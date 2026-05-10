@@ -1,7 +1,7 @@
-﻿namespace Universal_Font_Patcher_BDO
+﻿namespace Universal_Font_Patcher_BDO;
+
+partial class Form1
 {
-    partial class Form1
-    {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -209,17 +209,16 @@
 
         #endregion
 
-        private System.Windows.Forms.Label gunaLabel1;
-        private System.Windows.Forms.Panel gunaPanel1;
-        private System.Windows.Forms.Label gunaLabel2;
-        private System.Windows.Forms.Button BtnContinue;
-        private System.Windows.Forms.Button BtnExit;
-        private System.Windows.Forms.Button BtnSelectFont;
-        private System.Windows.Forms.Button BtnSelectGameFolder;
-        private System.Windows.Forms.TextBox TxtFontPath;
-        private System.Windows.Forms.TextBox TxtGamePath;
-        private System.Windows.Forms.Label gunaLabel3;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.Label gunaLabel1 = null!;
+        private System.Windows.Forms.Panel gunaPanel1 = null!;
+        private System.Windows.Forms.Label gunaLabel2 = null!;
+        private System.Windows.Forms.Button BtnContinue = null!;
+        private System.Windows.Forms.Button BtnExit = null!;
+        private System.Windows.Forms.Button BtnSelectFont = null!;
+        private System.Windows.Forms.Button BtnSelectGameFolder = null!;
+        private System.Windows.Forms.TextBox TxtFontPath = null!;
+        private System.Windows.Forms.TextBox TxtGamePath = null!;
+        private System.Windows.Forms.Label gunaLabel3 = null!;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1 = null!;
     }
-}
 
