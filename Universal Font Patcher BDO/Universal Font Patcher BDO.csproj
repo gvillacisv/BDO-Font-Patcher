@@ -15,15 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Guna.UI">
-      <HintPath>libs\Guna.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Siticone.UI">
-      <HintPath>libs\Siticone.UI.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Include="Patcher.cs">
       <SubType>Form</SubType>
     </Compile>

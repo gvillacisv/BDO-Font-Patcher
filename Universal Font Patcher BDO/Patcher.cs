@@ -23,7 +23,6 @@ namespace Universal_Font_Patcher_BDO
         public Form1()
         {
             InitializeComponent();
-            gunaAnimateWindow1.Start();
             SoundPlayer audio = new SoundPlayer(Universal_Font_Patcher_BDO.Properties.Resources.checkbox_sound);
             audio.Play();
         }

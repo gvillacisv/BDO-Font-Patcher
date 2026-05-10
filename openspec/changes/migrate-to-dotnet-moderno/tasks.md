@@ -12,18 +12,18 @@
 
 ## PR 2: Replace Guna/Siticone with native WinForms (net472)
 
-- [ ] 2.1 Update `Patcher.Designer.cs` — change `GunaLabel` declarations to `System.Windows.Forms.Label` (gunaLabel1, gunaLabel2, gunaLabel3)
-- [ ] 2.2 Update `Patcher.Designer.cs` — change `GunaPanel` declaration to `System.Windows.Forms.Panel` (gunaPanel1)
-- [ ] 2.3 Update `Patcher.Designer.cs` — delete `gunaAnimateWindow1` field declaration entirely
-- [ ] 2.4 Update `Patcher.Designer.cs` — change `SiticoneButton` declarations to `System.Windows.Forms.Button` (BtnContinue, BtnExit, BtnSelectFont, BtnSelectGameFolder)
-- [ ] 2.5 Update `Patcher.Designer.cs` — change `SiticoneTextBox` declarations to `System.Windows.Forms.TextBox` (TxtGamePath, TxtFontPath)
-- [ ] 2.6 Update `Patcher.Designer.cs` InitializeComponent — update constructors from `new Guna.UI.WinForms.*()` to `new System.Windows.Forms.*()`
-- [ ] 2.7 Update `Patcher.Designer.cs` InitializeComponent — update button properties: set `FlatStyle=FlatStyle.Flat`, `FlatAppearance.BorderSize=0`, `FlatAppearance.MouseOverBackColor`, `UseVisualStyleBackColor=false`, `BackColor=dark color`
-- [ ] 2.8 Update `Patcher.Designer.cs` InitializeComponent — update textbox properties: set `BackColor=dark`, `BorderStyle=FixedSingle`, `ForeColor=White`
-- [ ] 2.9 Update `Patcher.Designer.cs` InitializeComponent — delete all `gunaAnimateWindow1` lines (constructor, properties)
-- [ ] 2.10 Update `Patcher.cs` — delete `gunaAnimateWindow1.Start()` line from constructor
-- [ ] 2.11 Update `.csproj` — remove `Guna.UI` and `Siticone.UI` DLL references from ItemGroup
-- [ ] 2.12 Delete `libs/Guna.UI.dll` and `libs/Siticone.UI.dll`
+- [x] 2.1 Update `Patcher.Designer.cs` — change `GunaLabel` declarations to `System.Windows.Forms.Label` (gunaLabel1, gunaLabel2, gunaLabel3)
+- [x] 2.2 Update `Patcher.Designer.cs` — change `GunaPanel` declaration to `System.Windows.Forms.Panel` (gunaPanel1)
+- [x] 2.3 Update `Patcher.Designer.cs` — delete `gunaAnimateWindow1` field declaration entirely
+- [x] 2.4 Update `Patcher.Designer.cs` — change `SiticoneButton` declarations to `System.Windows.Forms.Button` (BtnContinue, BtnExit, BtnSelectFont, BtnSelectGameFolder)
+- [x] 2.5 Update `Patcher.Designer.cs` — change `SiticoneTextBox` declarations to `System.Windows.Forms.TextBox` (TxtGamePath, TxtFontPath)
+- [x] 2.6 Update `Patcher.Designer.cs` InitializeComponent — update constructors from `new Guna.UI.WinForms.*()` to `new System.Windows.Forms.*()`
+- [x] 2.7 Update `Patcher.Designer.cs` InitializeComponent — update button properties: set `FlatStyle=FlatStyle.Flat`, `FlatAppearance.BorderSize=0`, `FlatAppearance.MouseOverBackColor`, `UseVisualStyleBackColor=false`, `BackColor=dark color`
+- [x] 2.8 Update `Patcher.Designer.cs` InitializeComponent — update textbox properties: set `BackColor=dark`, `BorderStyle=FixedSingle`, `ForeColor=White`
+- [x] 2.9 Update `Patcher.Designer.cs` InitializeComponent — delete all `gunaAnimateWindow1` lines (constructor, properties)
+- [x] 2.10 Update `Patcher.cs` — delete `gunaAnimateWindow1.Start()` line from constructor
+- [x] 2.11 Update `.csproj` — remove `Guna.UI` and `Siticone.UI` DLL references from ItemGroup
+- [x] 2.12 Delete `libs/Guna.UI.dll` and `libs/Siticone.UI.dll` (libs/ directory does not exist - no DLLs to delete)
 - [ ] 2.13 Verify: `dotnet build` succeeds on net472
 - [ ] 2.14 Verify: UI visually matches original (colors, sizes, positions)
 

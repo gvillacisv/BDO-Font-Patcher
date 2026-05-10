@@ -30,17 +30,16 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.gunaLabel1 = new Guna.UI.WinForms.GunaLabel();
-            this.gunaPanel1 = new Guna.UI.WinForms.GunaPanel();
-            this.BtnExit = new Siticone.UI.WinForms.SiticoneButton();
-            this.gunaLabel2 = new Guna.UI.WinForms.GunaLabel();
-            this.BtnContinue = new Siticone.UI.WinForms.SiticoneButton();
-            this.gunaAnimateWindow1 = new Guna.UI.WinForms.GunaAnimateWindow(this.components);
-            this.TxtGamePath = new Siticone.UI.WinForms.SiticoneTextBox();
-            this.TxtFontPath = new Siticone.UI.WinForms.SiticoneTextBox();
-            this.BtnSelectGameFolder = new Siticone.UI.WinForms.SiticoneButton();
-            this.BtnSelectFont = new Siticone.UI.WinForms.SiticoneButton();
-            this.gunaLabel3 = new Guna.UI.WinForms.GunaLabel();
+            this.gunaLabel1 = new System.Windows.Forms.Label();
+            this.gunaPanel1 = new System.Windows.Forms.Panel();
+            this.BtnExit = new System.Windows.Forms.Button();
+            this.gunaLabel2 = new System.Windows.Forms.Label();
+            this.BtnContinue = new System.Windows.Forms.Button();
+            this.TxtGamePath = new System.Windows.Forms.TextBox();
+            this.TxtFontPath = new System.Windows.Forms.TextBox();
+            this.BtnSelectGameFolder = new System.Windows.Forms.Button();
+            this.BtnSelectFont = new System.Windows.Forms.Button();
+            this.gunaLabel3 = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.gunaPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -69,18 +68,18 @@
             // 
             // BtnExit
             // 
-            this.BtnExit.CheckedState.Parent = this.BtnExit;
-            this.BtnExit.CustomImages.Parent = this.BtnExit;
-            this.BtnExit.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.BtnExit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.BtnExit.FlatAppearance.BorderSize = 0;
+            this.BtnExit.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.BtnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnExit.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.BtnExit.ForeColor = System.Drawing.Color.White;
-            this.BtnExit.HoveredState.Parent = this.BtnExit;
             this.BtnExit.Location = new System.Drawing.Point(421, 7);
             this.BtnExit.Name = "BtnExit";
-            this.BtnExit.ShadowDecoration.Parent = this.BtnExit;
             this.BtnExit.Size = new System.Drawing.Size(51, 24);
             this.BtnExit.TabIndex = 26;
             this.BtnExit.Text = "X";
+            this.BtnExit.UseVisualStyleBackColor = false;
             this.BtnExit.Click += new System.EventHandler(this.BtnExit_Click);
             // 
             // gunaLabel2
@@ -95,110 +94,78 @@
             // 
             // BtnContinue
             // 
-            this.BtnContinue.BorderRadius = 3;
-            this.BtnContinue.CheckedState.Parent = this.BtnContinue;
-            this.BtnContinue.CustomImages.Parent = this.BtnContinue;
-            this.BtnContinue.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.BtnContinue.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.BtnContinue.FlatAppearance.BorderSize = 0;
+            this.BtnContinue.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            this.BtnContinue.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnContinue.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnContinue.ForeColor = System.Drawing.Color.White;
-            this.BtnContinue.HoveredState.Parent = this.BtnContinue;
             this.BtnContinue.Location = new System.Drawing.Point(13, 128);
             this.BtnContinue.Name = "BtnContinue";
-            this.BtnContinue.ShadowDecoration.Parent = this.BtnContinue;
             this.BtnContinue.Size = new System.Drawing.Size(459, 30);
             this.BtnContinue.TabIndex = 25;
             this.BtnContinue.Text = "Use selected font";
-            this.BtnContinue.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+            this.BtnContinue.UseVisualStyleBackColor = false;
             this.BtnContinue.Click += new System.EventHandler(this.BtnContinue_Click);
-            // 
-            // gunaAnimateWindow1
-            // 
-            this.gunaAnimateWindow1.AnimationType = Guna.UI.WinForms.GunaAnimateWindow.AnimateWindowType.AW_CENTER;
-            this.gunaAnimateWindow1.Interval = 100;
-            this.gunaAnimateWindow1.TargetControl = this;
             // 
             // TxtGamePath
             // 
+            this.TxtGamePath.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.TxtGamePath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TxtGamePath.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.TxtGamePath.DefaultText = "C:\\..";
-            this.TxtGamePath.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.TxtGamePath.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.TxtGamePath.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.TxtGamePath.DisabledState.Parent = this.TxtGamePath;
-            this.TxtGamePath.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.TxtGamePath.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.TxtGamePath.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.TxtGamePath.FocusedState.Parent = this.TxtGamePath;
-            this.TxtGamePath.HoveredState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.TxtGamePath.HoveredState.Parent = this.TxtGamePath;
+            this.TxtGamePath.ForeColor = System.Drawing.Color.White;
             this.TxtGamePath.Location = new System.Drawing.Point(195, 44);
             this.TxtGamePath.Name = "TxtGamePath";
-            this.TxtGamePath.PasswordChar = '\0';
-            this.TxtGamePath.PlaceholderText = "";
             this.TxtGamePath.ReadOnly = true;
-            this.TxtGamePath.SelectedText = "";
-            this.TxtGamePath.ShadowDecoration.Parent = this.TxtGamePath;
             this.TxtGamePath.Size = new System.Drawing.Size(277, 36);
             this.TxtGamePath.TabIndex = 28;
+            this.TxtGamePath.Text = "C:\\..";
+            this.TxtGamePath.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             // 
             // TxtFontPath
             // 
+            this.TxtFontPath.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.TxtFontPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TxtFontPath.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.TxtFontPath.DefaultText = "C:\\..";
-            this.TxtFontPath.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.TxtFontPath.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.TxtFontPath.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.TxtFontPath.DisabledState.Parent = this.TxtFontPath;
-            this.TxtFontPath.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.TxtFontPath.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.TxtFontPath.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.TxtFontPath.FocusedState.Parent = this.TxtFontPath;
-            this.TxtFontPath.HoveredState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.TxtFontPath.HoveredState.Parent = this.TxtFontPath;
+            this.TxtFontPath.ForeColor = System.Drawing.Color.White;
             this.TxtFontPath.Location = new System.Drawing.Point(195, 86);
             this.TxtFontPath.Name = "TxtFontPath";
-            this.TxtFontPath.PasswordChar = '\0';
-            this.TxtFontPath.PlaceholderText = "";
             this.TxtFontPath.ReadOnly = true;
-            this.TxtFontPath.SelectedText = "";
-            this.TxtFontPath.ShadowDecoration.Parent = this.TxtFontPath;
             this.TxtFontPath.Size = new System.Drawing.Size(277, 36);
             this.TxtFontPath.TabIndex = 29;
+            this.TxtFontPath.Text = "C:\\..";
+            this.TxtFontPath.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             // 
             // BtnSelectGameFolder
             // 
-            this.BtnSelectGameFolder.BorderRadius = 3;
-            this.BtnSelectGameFolder.CheckedState.Parent = this.BtnSelectGameFolder;
-            this.BtnSelectGameFolder.CustomImages.Parent = this.BtnSelectGameFolder;
-            this.BtnSelectGameFolder.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.BtnSelectGameFolder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.BtnSelectGameFolder.FlatAppearance.BorderSize = 0;
+            this.BtnSelectGameFolder.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            this.BtnSelectGameFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnSelectGameFolder.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnSelectGameFolder.ForeColor = System.Drawing.Color.White;
-            this.BtnSelectGameFolder.HoveredState.Parent = this.BtnSelectGameFolder;
             this.BtnSelectGameFolder.Location = new System.Drawing.Point(12, 44);
             this.BtnSelectGameFolder.Name = "BtnSelectGameFolder";
-            this.BtnSelectGameFolder.ShadowDecoration.Parent = this.BtnSelectGameFolder;
             this.BtnSelectGameFolder.Size = new System.Drawing.Size(177, 36);
             this.BtnSelectGameFolder.TabIndex = 30;
             this.BtnSelectGameFolder.Text = "Select game folder";
-            this.BtnSelectGameFolder.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+            this.BtnSelectGameFolder.UseVisualStyleBackColor = false;
             this.BtnSelectGameFolder.Click += new System.EventHandler(this.BtnSelectGameFolder_Click);
             // 
             // BtnSelectFont
             // 
-            this.BtnSelectFont.BorderRadius = 3;
-            this.BtnSelectFont.CheckedState.Parent = this.BtnSelectFont;
-            this.BtnSelectFont.CustomImages.Parent = this.BtnSelectFont;
-            this.BtnSelectFont.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.BtnSelectFont.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.BtnSelectFont.FlatAppearance.BorderSize = 0;
+            this.BtnSelectFont.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            this.BtnSelectFont.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnSelectFont.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnSelectFont.ForeColor = System.Drawing.Color.White;
-            this.BtnSelectFont.HoveredState.Parent = this.BtnSelectFont;
             this.BtnSelectFont.Location = new System.Drawing.Point(12, 86);
             this.BtnSelectFont.Name = "BtnSelectFont";
-            this.BtnSelectFont.ShadowDecoration.Parent = this.BtnSelectFont;
             this.BtnSelectFont.Size = new System.Drawing.Size(177, 36);
             this.BtnSelectFont.TabIndex = 31;
             this.BtnSelectFont.Text = "Select font";
-            this.BtnSelectFont.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+            this.BtnSelectFont.UseVisualStyleBackColor = false;
             this.BtnSelectFont.Click += new System.EventHandler(this.BtnSelectFont_Click);
             // 
             // gunaLabel3
@@ -242,17 +209,16 @@
 
         #endregion
 
-        private Guna.UI.WinForms.GunaLabel gunaLabel1;
-        private Guna.UI.WinForms.GunaPanel gunaPanel1;
-        private Guna.UI.WinForms.GunaLabel gunaLabel2;
-        private Siticone.UI.WinForms.SiticoneButton BtnContinue;
-        private Siticone.UI.WinForms.SiticoneButton BtnExit;
-        private Guna.UI.WinForms.GunaAnimateWindow gunaAnimateWindow1;
-        private Siticone.UI.WinForms.SiticoneButton BtnSelectFont;
-        private Siticone.UI.WinForms.SiticoneButton BtnSelectGameFolder;
-        private Siticone.UI.WinForms.SiticoneTextBox TxtFontPath;
-        private Siticone.UI.WinForms.SiticoneTextBox TxtGamePath;
-        private Guna.UI.WinForms.GunaLabel gunaLabel3;
+        private System.Windows.Forms.Label gunaLabel1;
+        private System.Windows.Forms.Panel gunaPanel1;
+        private System.Windows.Forms.Label gunaLabel2;
+        private System.Windows.Forms.Button BtnContinue;
+        private System.Windows.Forms.Button BtnExit;
+        private System.Windows.Forms.Button BtnSelectFont;
+        private System.Windows.Forms.Button BtnSelectGameFolder;
+        private System.Windows.Forms.TextBox TxtFontPath;
+        private System.Windows.Forms.TextBox TxtGamePath;
+        private System.Windows.Forms.Label gunaLabel3;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
     }
 }
