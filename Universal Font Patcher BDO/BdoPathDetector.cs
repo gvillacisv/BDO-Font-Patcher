@@ -1,4 +1,5 @@
 using Microsoft.Win32;
+using System.Security;
 
 namespace Universal_Font_Patcher_BDO;
 
