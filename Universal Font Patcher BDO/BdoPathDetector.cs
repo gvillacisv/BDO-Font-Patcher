@@ -11,16 +11,6 @@ internal static class BdoPathDetector
 
     private const string SteamRegistryKey = @"SOFTWARE\WOW6432Node\Valve\Steam";
     private const string SteamInstallPathValue = "InstallPath";
-    private const string BdoSteamAppId = "836620";
-
-    private static readonly string[] CommonPaths =
-    {
-        @"C:\Pearl Abyss\BlackDesert",
-        @"C:\Program Files (x86)\Black Desert Online",
-        @"C:\Program Files\Black Desert Online",
-        @"D:\Pearl Abyss\BlackDesert",
-        @"D:\Games\Pearl Abyss\BlackDesert"
-    };
 
     public static List<string> DetectAll()
     {
@@ -30,9 +20,6 @@ internal static class BdoPathDetector
             results.Add(path);
 
         foreach (var path in DetectFromSteam())
-            results.Add(path);
-
-        foreach (var path in DetectFromCommonPaths())
             results.Add(path);
 
         return results.ToList();
@@ -85,23 +72,22 @@ internal static class BdoPathDetector
             if (string.IsNullOrEmpty(steamPath) || !Directory.Exists(steamPath))
                 return paths;
 
-            // Check primary library: {SteamPath}\steamapps\common\BlackDesert
-            string primaryPath = Path.Combine(steamPath, "steamapps", "common", "BlackDesert");
-            if (IsValidBdoPath(primaryPath))
-                paths.Add(primaryPath);
+            // Collect all Steam library roots (primary + secondary from libraryfolders.vdf)
+            var libraryRoots = GetSteamLibraryRoots(steamPath);
 
-            // Parse appmanifest to get the actual install directory name (handles renames)
-            string manifestPath = Path.Combine(steamPath, "steamapps", $"appmanifest_{BdoSteamAppId}.acf");
-            string? installDir = ParseSteamManifestInstallDir(manifestPath);
-            if (!string.IsNullOrEmpty(installDir))
+            // Scan each library's steamapps/common/ for BDO installations
+            foreach (var libRoot in libraryRoots)
             {
-                string manifestInstallPath = Path.Combine(steamPath, "steamapps", "common", installDir);
-                if (IsValidBdoPath(manifestInstallPath) && !paths.Contains(manifestInstallPath))
-                    paths.Add(manifestInstallPath);
-            }
+                string commonDir = Path.Combine(libRoot, "steamapps", "common");
+                if (!Directory.Exists(commonDir))
+                    continue;
 
-            // Check secondary Steam library folders
-            paths.AddRange(DetectFromSteamLibraryFolders(steamPath));
+                foreach (string subDir in Directory.EnumerateDirectories(commonDir))
+                {
+                    if (IsValidBdoPath(subDir) && !paths.Contains(subDir))
+                        paths.Add(subDir);
+                }
+            }
         }
         catch (Exception)
         {
@@ -124,52 +110,17 @@ internal static class BdoPathDetector
         }
     }
 
-    private static string? ParseSteamManifestInstallDir(string manifestPath)
+    private static List<string> GetSteamLibraryRoots(string primarySteamPath)
     {
-        if (!File.Exists(manifestPath))
-            return null;
+        var roots = new List<string> { primarySteamPath };
+
+        string vdfPath = Path.Combine(primarySteamPath, "steamapps", "libraryfolders.vdf");
+        if (!File.Exists(vdfPath))
+            return roots;
 
         try
         {
-            // Parse "installdir" from appmanifest_836620.acf
-            // Format: "installdir"    "BlackDesert"
-            foreach (var line in File.ReadLines(manifestPath))
-            {
-                string trimmed = line.Trim();
-                if (trimmed.StartsWith("\"installdir\"", StringComparison.OrdinalIgnoreCase))
-                {
-                    int firstQuote = trimmed.IndexOf('"');
-                    int secondQuote = trimmed.IndexOf('"', firstQuote + 1);
-                    if (firstQuote >= 0 && secondQuote > firstQuote)
-                    {
-                        return trimmed.Substring(firstQuote + 1, secondQuote - firstQuote - 1);
-                    }
-                }
-            }
-        }
-        catch (Exception)
-        {
-            // Corrupt manifest — skip
-        }
-
-        return null;
-    }
-
-    private static List<string> DetectFromSteamLibraryFolders(string steamPath)
-    {
-        var paths = new List<string>();
-
-        string libraryFoldersVdf = Path.Combine(steamPath, "steamapps", "libraryfolders.vdf");
-        if (!File.Exists(libraryFoldersVdf))
-            return paths;
-
-        try
-        {
-            // Parse libraryfolders.vdf for "path" entries
-            // Format: "path"    "D:\SteamLibrary"
-            var libraryRoots = new List<string> { steamPath };
-
-            foreach (var line in File.ReadLines(libraryFoldersVdf))
+            foreach (var line in File.ReadLines(vdfPath))
             {
                 string trimmed = line.Trim();
                 if (trimmed.StartsWith("\"path\"", StringComparison.OrdinalIgnoreCase))
@@ -179,44 +130,21 @@ internal static class BdoPathDetector
                     if (firstQuote >= 0 && secondQuote > firstQuote)
                     {
                         string libPath = trimmed.Substring(firstQuote + 1, secondQuote - firstQuote - 1);
-                        if (Directory.Exists(libPath) && !libraryRoots.Contains(libPath, StringComparer.OrdinalIgnoreCase))
-                            libraryRoots.Add(libPath);
+                        if (Directory.Exists(libPath) &&
+                            !roots.Contains(libPath, StringComparer.OrdinalIgnoreCase))
+                        {
+                            roots.Add(libPath);
+                        }
                     }
-                }
-            }
-
-            // Check each library for BDO
-            foreach (var libRoot in libraryRoots)
-            {
-                // Direct path
-                string bdoPath = Path.Combine(libRoot, "steamapps", "common", "BlackDesert");
-                if (IsValidBdoPath(bdoPath) && !paths.Contains(bdoPath))
-                    paths.Add(bdoPath);
-
-                // Parsed from manifest
-                string manifestPath = Path.Combine(libRoot, "steamapps", $"appmanifest_{BdoSteamAppId}.acf");
-                string? installDir = ParseSteamManifestInstallDir(manifestPath);
-                if (!string.IsNullOrEmpty(installDir))
-                {
-                    string manifestPath2 = Path.Combine(libRoot, "steamapps", "common", installDir);
-                    if (IsValidBdoPath(manifestPath2) && !paths.Contains(manifestPath2))
-                        paths.Add(manifestPath2);
                 }
             }
         }
         catch (Exception)
         {
-            // Corrupt libraryfolders.vdf — skip
+            // Corrupt libraryfolders.vdf — skip, primary path already added
         }
 
-        return paths;
-    }
-
-    private static List<string> DetectFromCommonPaths()
-    {
-        return CommonPaths
-            .Where(IsValidBdoPath)
-            .ToList();
+        return roots;
     }
 
     public static bool IsValidBdoPath(string? path)
