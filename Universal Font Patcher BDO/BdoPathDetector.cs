@@ -60,18 +60,10 @@ internal static class BdoPathDetector
                 if (!isBdo) continue;
 
                 string? installLoc = appKey.GetValue("InstallLocation") as string;
-                if (!string.IsNullOrEmpty(installLoc) && IsValidBdoPath(installLoc) && !paths.Contains(installLoc))
+                if (!string.IsNullOrEmpty(installLoc) && IsValidBdoPath(installLoc) &&
+                    !paths.Any(p => string.Equals(p, installLoc, StringComparison.OrdinalIgnoreCase)))
                 {
                     paths.Add(installLoc);
-                    continue;
-                }
-
-                string? iconPath = appKey.GetValue("DisplayIcon") as string;
-                if (!string.IsNullOrEmpty(iconPath))
-                {
-                    string? dir = Path.GetDirectoryName(iconPath);
-                    if (!string.IsNullOrEmpty(dir) && IsValidBdoPath(dir) && !paths.Contains(dir))
-                        paths.Add(dir);
                 }
             }
             catch (SecurityException) { }
