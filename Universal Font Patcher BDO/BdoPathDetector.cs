@@ -65,7 +65,11 @@ internal static class BdoPathDetector
         {
             return null;
         }
-        catch (SystemException)
+        catch (UnauthorizedAccessException)
+        {
+            return null;
+        }
+        catch (ObjectDisposedException)
         {
             return null;
         }
@@ -128,13 +132,21 @@ internal static class BdoPathDetector
                                 paths.Add(dir);
                         }
                     }
-                    catch (Exception)
+                    catch (SecurityException)
+                    {
+                        // Skip individual uninstall entries that can't be read
+                    }
+                    catch (UnauthorizedAccessException)
                     {
                         // Skip individual uninstall entries that can't be read
                     }
                 }
             }
-            catch (Exception)
+            catch (SecurityException)
+            {
+                // Skip uninstall root if inaccessible
+            }
+            catch (UnauthorizedAccessException)
             {
                 // Skip uninstall root if inaccessible
             }
@@ -171,7 +183,15 @@ internal static class BdoPathDetector
                 }
             }
         }
-        catch (Exception)
+        catch (IOException)
+        {
+            // Steam not installed or inaccessible
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // Steam not installed or inaccessible
+        }
+        catch (DirectoryNotFoundException)
         {
             // Steam not installed or inaccessible
         }
@@ -186,7 +206,11 @@ internal static class BdoPathDetector
             using var steamKey = Registry.LocalMachine.OpenSubKey(SteamRegistryKey, false);
             return steamKey?.GetValue(SteamInstallPathValue) as string;
         }
-        catch (Exception)
+        catch (SecurityException)
+        {
+            return null;
+        }
+        catch (UnauthorizedAccessException)
         {
             return null;
         }
@@ -221,7 +245,11 @@ internal static class BdoPathDetector
                 }
             }
         }
-        catch (Exception)
+        catch (IOException)
+        {
+            // Corrupt libraryfolders.vdf — skip
+        }
+        catch (UnauthorizedAccessException)
         {
             // Corrupt libraryfolders.vdf — skip
         }
