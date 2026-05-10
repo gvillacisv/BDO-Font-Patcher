@@ -28,57 +28,55 @@ internal static class BdoPathDetector
                 using var uninstallKey = Registry.LocalMachine.OpenSubKey(root, false);
                 if (uninstallKey == null) continue;
 
-                foreach (string subKeyName in uninstallKey.GetSubKeyNames())
-                {
-                    try
-                    {
-                        using var appKey = uninstallKey.OpenSubKey(subKeyName, false);
-                        if (appKey == null) continue;
-
-                        bool isBdo = false;
-
-                        // Priority: subkey named "BlackDesert_*" (NA, SA, EU, etc.)
-                        if (subKeyName.StartsWith("BlackDesert_", StringComparison.OrdinalIgnoreCase))
-                            isBdo = true;
-
-                        // Fallback: DisplayName contains "Black Desert"
-                        if (!isBdo)
-                        {
-                            string? displayName = appKey.GetValue("DisplayName") as string;
-                            if (!string.IsNullOrEmpty(displayName) &&
-                                (displayName.Contains("Black Desert", StringComparison.OrdinalIgnoreCase) ||
-                                 displayName.Contains("BlackDesert", StringComparison.OrdinalIgnoreCase)))
-                                isBdo = true;
-                        }
-
-                        if (!isBdo) continue;
-
-                        // Read InstallLocation (Inno Setup entries always have this)
-                        string? installLoc = appKey.GetValue("InstallLocation") as string;
-                        if (!string.IsNullOrEmpty(installLoc) && IsValidBdoPath(installLoc) && !paths.Contains(installLoc))
-                        {
-                            paths.Add(installLoc);
-                            continue;
-                        }
-
-                        // Fallback: derive path from DisplayIcon
-                        string? iconPath = appKey.GetValue("DisplayIcon") as string;
-                        if (!string.IsNullOrEmpty(iconPath))
-                        {
-                            string? dir = Path.GetDirectoryName(iconPath);
-                            if (!string.IsNullOrEmpty(dir) && IsValidBdoPath(dir) && !paths.Contains(dir))
-                                paths.Add(dir);
-                        }
-                    }
-                    catch (SecurityException) { }
-                    catch (UnauthorizedAccessException) { }
-                }
+                ScanUninstallSubKeys(uninstallKey, paths);
             }
             catch (SecurityException) { }
             catch (UnauthorizedAccessException) { }
         }
 
         return paths;
+    }
+
+    private static void ScanUninstallSubKeys(RegistryKey uninstallKey, List<string> paths)
+    {
+        foreach (string subKeyName in uninstallKey.GetSubKeyNames())
+        {
+            try
+            {
+                using var appKey = uninstallKey.OpenSubKey(subKeyName, false);
+                if (appKey == null) continue;
+
+                bool isBdo = subKeyName.StartsWith("BlackDesert_", StringComparison.OrdinalIgnoreCase);
+
+                if (!isBdo)
+                {
+                    string? displayName = appKey.GetValue("DisplayName") as string;
+                    if (!string.IsNullOrEmpty(displayName) &&
+                        (displayName.Contains("Black Desert", StringComparison.OrdinalIgnoreCase) ||
+                         displayName.Contains("BlackDesert", StringComparison.OrdinalIgnoreCase)))
+                        isBdo = true;
+                }
+
+                if (!isBdo) continue;
+
+                string? installLoc = appKey.GetValue("InstallLocation") as string;
+                if (!string.IsNullOrEmpty(installLoc) && IsValidBdoPath(installLoc) && !paths.Contains(installLoc))
+                {
+                    paths.Add(installLoc);
+                    continue;
+                }
+
+                string? iconPath = appKey.GetValue("DisplayIcon") as string;
+                if (!string.IsNullOrEmpty(iconPath))
+                {
+                    string? dir = Path.GetDirectoryName(iconPath);
+                    if (!string.IsNullOrEmpty(dir) && IsValidBdoPath(dir) && !paths.Contains(dir))
+                        paths.Add(dir);
+                }
+            }
+            catch (SecurityException) { }
+            catch (UnauthorizedAccessException) { }
+        }
     }
 
     public static bool IsValidBdoPath(string? path)
