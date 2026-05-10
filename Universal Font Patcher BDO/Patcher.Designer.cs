@@ -40,6 +40,8 @@ partial class Form1
             this.BtnSelectGameFolder = new System.Windows.Forms.Button();
             this.BtnSelectFont = new System.Windows.Forms.Button();
             this.gunaLabel3 = new System.Windows.Forms.Label();
+            this.lblDetectedPaths = new System.Windows.Forms.Label();
+            this.flowPathsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.gunaPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -100,7 +102,7 @@ partial class Form1
             this.BtnContinue.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BtnContinue.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnContinue.ForeColor = System.Drawing.Color.White;
-            this.BtnContinue.Location = new System.Drawing.Point(13, 128);
+            this.BtnContinue.Location = new System.Drawing.Point(13, 205);
             this.BtnContinue.Name = "BtnContinue";
             this.BtnContinue.Size = new System.Drawing.Size(459, 30);
             this.BtnContinue.TabIndex = 25;
@@ -168,12 +170,35 @@ partial class Form1
             this.BtnSelectFont.UseVisualStyleBackColor = false;
             this.BtnSelectFont.Click += new System.EventHandler(this.BtnSelectFont_Click);
             // 
+            // lblDetectedPaths
+            // 
+            this.lblDetectedPaths.AutoSize = true;
+            this.lblDetectedPaths.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDetectedPaths.ForeColor = System.Drawing.Color.White;
+            this.lblDetectedPaths.Location = new System.Drawing.Point(12, 105);
+            this.lblDetectedPaths.Name = "lblDetectedPaths";
+            this.lblDetectedPaths.Size = new System.Drawing.Size(130, 14);
+            this.lblDetectedPaths.TabIndex = 33;
+            this.lblDetectedPaths.Text = "Detected installations:";
+            // 
+            // flowPathsPanel
+            // 
+            this.flowPathsPanel.AutoScroll = true;
+            this.flowPathsPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.flowPathsPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowPathsPanel.ForeColor = System.Drawing.Color.White;
+            this.flowPathsPanel.Location = new System.Drawing.Point(12, 125);
+            this.flowPathsPanel.Name = "flowPathsPanel";
+            this.flowPathsPanel.Size = new System.Drawing.Size(459, 60);
+            this.flowPathsPanel.TabIndex = 34;
+            this.flowPathsPanel.WrapContents = false;
+            // 
             // gunaLabel3
             // 
             this.gunaLabel3.AutoSize = true;
             this.gunaLabel3.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gunaLabel3.ForeColor = System.Drawing.Color.White;
-            this.gunaLabel3.Location = new System.Drawing.Point(12, 161);
+            this.gunaLabel3.Location = new System.Drawing.Point(12, 240);
             this.gunaLabel3.Name = "gunaLabel3";
             this.gunaLabel3.Size = new System.Drawing.Size(45, 13);
             this.gunaLabel3.TabIndex = 32;
@@ -184,8 +209,10 @@ partial class Form1
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.ClientSize = new System.Drawing.Size(478, 182);
+            this.ClientSize = new System.Drawing.Size(478, 262);
             this.Controls.Add(this.gunaLabel3);
+            this.Controls.Add(this.flowPathsPanel);
+            this.Controls.Add(this.lblDetectedPaths);
             this.Controls.Add(this.BtnSelectFont);
             this.Controls.Add(this.BtnSelectGameFolder);
             this.Controls.Add(this.TxtFontPath);
@@ -200,6 +227,7 @@ partial class Form1
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "UFP - TERMS";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.gunaPanel1.ResumeLayout(false);
             this.gunaPanel1.PerformLayout();
             this.ResumeLayout(false);
@@ -220,5 +248,7 @@ partial class Form1
         private System.Windows.Forms.TextBox TxtGamePath = null!;
         private System.Windows.Forms.Label gunaLabel3 = null!;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1 = null!;
+        private System.Windows.Forms.Label lblDetectedPaths = null!;
+        private System.Windows.Forms.FlowLayoutPanel flowPathsPanel = null!;
     }
 

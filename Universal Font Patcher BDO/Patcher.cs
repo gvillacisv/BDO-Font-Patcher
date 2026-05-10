@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Linq;
 using System.Media;
 
 namespace Universal_Font_Patcher_BDO;
@@ -16,42 +17,105 @@ public partial class Form1 : Form
             audio.Play();
         }
 
+        private void Form1_Load(object? sender, EventArgs e)
+        {
+            var paths = BdoPathDetector.DetectAll();
+
+            if (paths.Count == 0)
+            {
+                lblDetectedPaths.Text = "No BDO installations found. Use Browse to select manually.";
+                BtnContinue.Enabled = false;
+                return;
+            }
+
+            foreach (var path in paths)
+            {
+                var cb = new CheckBox();
+                string displayName = path.Contains("Steam", StringComparison.OrdinalIgnoreCase)
+                    ? "Steam"
+                    : "Standalone";
+                cb.Text = $"{displayName}: {path}";
+                cb.Tag = path;
+                cb.ForeColor = Color.White;
+                cb.BackColor = Color.Transparent;
+                cb.Font = new Font("Calibri", 9F, FontStyle.Regular);
+                cb.CheckedChanged += PathCheckbox_CheckedChanged;
+                cb.Checked = true; // default: checked
+                flowPathsPanel.Controls.Add(cb);
+            }
+
+            TxtGamePath.Text = $"{paths.Count} installation(s) detected";
+            PathCheckbox_CheckedChanged(sender, e);
+        }
+
+        private void PathCheckbox_CheckedChanged(object? sender, EventArgs? e)
+        {
+            bool anyChecked = flowPathsPanel.Controls
+                .OfType<CheckBox>()
+                .Any(cb => cb.Checked);
+
+            bool fontSelected = !string.IsNullOrWhiteSpace(TxtFontPath.Text);
+
+            BtnContinue.Enabled = anyChecked && fontSelected;
+        }
+
         private void siticoneCustomCheckBox6_CheckedChanged(object sender, EventArgs e)
         {
             SoundPlayer audio = new SoundPlayer(Universal_Font_Patcher_BDO.Properties.Resources.checkbox_sound);
             audio.Play();
         }
 
-        private void BtnContinue_Click(object sender, EventArgs e)
-        {
-          
-          
+private void BtnContinue_Click(object sender, EventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(TxtFontPath.Text))
+            return;
 
-            string sourceFile = TxtFontPath.Text;
-            string destinationFile = TxtGamePath.Text +"\\prestringtable\\font\\pearl.ttf";
-            string dir = TxtGamePath.Text + "\\prestringtable\\font\\";
-            if (!Directory.Exists(dir))
+        var checkedPaths = flowPathsPanel.Controls
+            .OfType<CheckBox>()
+            .Where(cb => cb.Checked)
+            .Select(cb => cb.Tag as string)
+            .Where(path => path != null)
+            .Cast<string>()
+            .ToList();
+
+        if (checkedPaths.Count == 0) return;
+
+            int successCount = 0;
+            int failCount = 0;
+            var errors = new List<string>();
+
+            foreach (string gamePath in checkedPaths)
             {
-                Directory.CreateDirectory(dir);
+                try
+                {
+                    string destDir = Path.Combine(gamePath, "prestringtable", "font");
+                    Directory.CreateDirectory(destDir);
+                    string destFile = Path.Combine(destDir, "pearl.ttf");
+                    File.Copy(TxtFontPath.Text, destFile, true);
+                    successCount++;
+                }
+                catch (Exception ex)
+                {
+                    failCount++;
+                    errors.Add($"- {gamePath}: {ex.Message}");
+                }
             }
-            try
+
+            // Sound: play success only if ALL succeeded, error if any failed
+            if (failCount == 0)
             {
-                File.Copy(sourceFile, destinationFile,true);
+                // Play original success sound
                 SoundPlayer audio = new SoundPlayer(Universal_Font_Patcher_BDO.Properties.Resources.button_sound);
                 audio.Play();
+                MessageBox.Show($"Font patched successfully to {successCount} installation(s)!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (IOException iox)
+            else
             {
                 SoundPlayer error = new SoundPlayer(Universal_Font_Patcher_BDO.Properties.Resources.error_sound);
                 error.Play();
-                MessageBox.Show(iox.Message);
+                string msg = $"Patched: {successCount} successful, {failCount} failed.\n\nErrors:\n{string.Join("\n", errors)}";
+                MessageBox.Show(msg, "Patch Results", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
-           
-            
-           
-                
-            
         }
 
        
@@ -77,10 +141,43 @@ public partial class Form1 : Form
 
                     if (fbd.SelectedPath.Contains("BlackDesert"))
                     {
-                        TxtGamePath.Text = fbd.SelectedPath;
-
                         audio.Play();
 
+                        // After validation, add browsed path as a new checkbox
+                        bool alreadyExists = flowPathsPanel.Controls
+                            .OfType<CheckBox>()
+                            .Any(cb => string.Equals(cb.Tag as string, fbd.SelectedPath, StringComparison.OrdinalIgnoreCase));
+
+                        if (!alreadyExists)
+                        {
+                            var cb = new CheckBox();
+                            cb.Text = $"Manual: {fbd.SelectedPath}";
+                            cb.Tag = fbd.SelectedPath;
+                            cb.ForeColor = Color.White;
+                            cb.BackColor = Color.Transparent;
+                            cb.Font = new Font("Calibri", 9F, FontStyle.Regular);
+                            cb.CheckedChanged += PathCheckbox_CheckedChanged;
+                            cb.Checked = true;
+                            flowPathsPanel.Controls.Add(cb);
+
+                            // Update summary
+                            int count = flowPathsPanel.Controls.OfType<CheckBox>().Count();
+                            TxtGamePath.Text = $"{count} installation(s)";
+                        }
+                        else
+                        {
+                            // Check the existing one
+                            foreach (CheckBox cb in flowPathsPanel.Controls.OfType<CheckBox>())
+                            {
+                                if (string.Equals(cb.Tag as string, fbd.SelectedPath, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    cb.Checked = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        PathCheckbox_CheckedChanged(sender, e);
                     }
                     else
                     {

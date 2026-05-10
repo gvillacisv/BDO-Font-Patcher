@@ -12,6 +12,19 @@
 | [`skill-registry.md`](./skill-registry.md) | Registry de skills del proyecto |
 | [`explorations/build-dependencies.md`](./explorations/build-dependencies.md) | Investigación de dependencias de build, setup local y distribución |
 
+## Change: auto-detect-game-path (ARCHIVED)
+
+| Artifact | Descripción |
+|----------|-------------|
+| [`exploration.md`](./changes/auto-detect-game-path/exploration.md) | Exploración de estrategias de auto-detección de ruta de BDO |
+| [`proposal.md`](./changes/auto-detect-game-path/proposal.md) | Propuesta formal del cambio |
+| [`specs.md`](./changes/auto-detect-game-path/specs.md) | Especificaciones funcionales y no funcionales |
+| [`design.md`](./changes/auto-detect-game-path/design.md) | Diseño técnico y decisiones de arquitectura |
+| [`tasks.md`](./changes/auto-detect-game-path/tasks.md) | Desglose de tareas de implementación |
+| [`apply-progress.md`](./changes/auto-detect-game-path/apply-progress.md) | Registro de progreso durante la implementación |
+| [`verify-report.md`](./changes/auto-detect-game-path/verify-report.md) | Reporte de verificación y validación |
+| [`archive-report.md`](./changes/auto-detect-game-path/archive-report.md) | Este reporte de archivado |
+
 ## Session: 2026-05-09
 
 ### Objetivo
