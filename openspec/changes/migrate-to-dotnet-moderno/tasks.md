@@ -29,12 +29,12 @@
 
 ## PR 3: Retarget to net8.0-windows + single-file
 
-- [ ] 3.1 Update `.csproj` — change `TargetFramework` from `net472` to `net8.0-windows`
-- [ ] 3.2 Update `.csproj` — add `<UseWindowsForms>true</UseWindowsForms>`
-- [ ] 3.3 Update `.csproj` — add `<RuntimeIdentifier>win-x64</RuntimeIdentifier>` and `<SelfContained>true</SelfContained>`
-- [ ] 3.4 Update `.csproj` — remove `Costura.Fody` and `Fody` PackageReference lines
-- [ ] 3.5 Delete `FodyWeavers.xml` — no longer needed
-- [ ] 3.6 Delete `App.config` — startup section obsolete in .NET 8
+- [x] 3.1 Update `.csproj` — change `TargetFramework` from `net472` to `net8.0-windows`
+- [x] 3.2 Update `.csproj` — add `<UseWindowsForms>true</UseWindowsForms>`
+- [x] 3.3 Update `.csproj` — add `<RuntimeIdentifier>win-x64</RuntimeIdentifier>` and `<SelfContained>true</SelfContained>`
+- [x] 3.4 Update `.csproj` — remove `Costura.Fody` and `Fody` PackageReference lines
+- [x] 3.5 Delete `FodyWeavers.xml` — no longer needed
+- [x] 3.6 Delete `App.config` — startup section obsolete in .NET 8
 - [ ] 3.7 Verify: `dotnet build` succeeds on net8.0-windows
 - [ ] 3.8 Verify: `dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true` produces single exe <50MB
 

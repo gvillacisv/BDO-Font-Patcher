@@ -1,64 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
     <RootNamespace>Universal_Font_Patcher_BDO</RootNamespace>
     <AssemblyName>Universal Font Patcher BDO</AssemblyName>
     <ApplicationIcon>layers_78965.ico</ApplicationIcon>
-    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Costura.Fody" Version="5.7.0" />
-    <PackageReference Include="Fody" Version="6.5.5" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Patcher.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Patcher.Designer.cs">
-      <DependentUpon>Patcher.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Patcher.resx">
-      <DependentUpon>Patcher.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="layers_78965.ico" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Resources\mixkit-modern-technology-select-3124.wav" />
-    <None Include="Resources\397633__jalastram__gui-sound-effects-080.wav" />
-    <None Include="Resources\397632__jalastram__gui-sound-effects-075.wav" />
-  </ItemGroup>
-
 </Project>
