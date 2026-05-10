@@ -1,3 +1,29 @@
+# Release v1.1.0
+
+## What's New
+
+Auto-detection of Black Desert Online game installations with multi-path support.
+
+### Changes
+
+- **Auto-detect BDO path**: Detects installations from Windows Registry (standalone client), Steam manifests (App ID 836620), and common filesystem paths
+- **Multi-installation support**: All detected paths shown as checkboxes — patch one, multiple, or all at once
+- **Smart validation**: Each detected path verified with `BlackDesertLauncher.exe` presence
+- **Manual override**: Browse button always available to add custom paths
+- Backward compatible — no changes to existing workflow
+
+### Usage
+
+1. Download `Universal Font Patcher BDO.exe` from Assets below
+2. Run on any Windows 10/11 machine
+3. Detected installations appear automatically with checkboxes
+4. Select a `.ttf` font file
+5. Check the installation(s) you want to patch
+6. Click **Use selected font** — patching applies to all checked paths
+7. Restart Black Desert Online
+
+---
+
 # Release v1.0.0
 
 ## What's New
