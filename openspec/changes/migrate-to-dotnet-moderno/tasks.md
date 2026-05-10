@@ -2,12 +2,12 @@
 
 ## PR 1: SDK-style .csproj + PackageReference (net472)
 
-- [ ] 1.1 Create SDK-style `.csproj` in `Universal Font Patcher BDO/` — convert legacy format to `Project Sdk="Microsoft.NET.Sdk"`, keep `net472`, preserve output/assembly settings
-- [ ] 1.2 Add `Costura.Fody` and `Fody` as PackageReference in `.csproj` (version 5.7.0 and 6.5.5)
-- [ ] 1.3 Copy `Guna.UI.dll` from Desktop to `libs/Guna.UI.dll` — copy from developer's Guna.UI.dll location
-- [ ] 1.4 Copy `Siticone.UI.dll` from Desktop to `libs/Siticone.UI.dll` — copy from developer's Siticone.UI.dll location
-- [ ] 1.5 Add DLL references in `.csproj` to `libs/Guna.UI.dll` and `libs/Siticone.UI.dll`
-- [ ] 1.6 Delete `packages.config` — no longer needed with PackageReference
+- [x] 1.1 Create SDK-style `.csproj` in `Universal Font Patcher BDO/` — convert legacy format to `Project Sdk="Microsoft.NET.Sdk"`, keep `net472`, preserve output/assembly settings
+- [x] 1.2 Add `Costura.Fody` and `Fody` as PackageReference in `.csproj` (version 5.7.0 and 6.5.5)
+- [x] 1.3 Copy `Guna.UI.dll` from Desktop to `libs/Guna.UI.dll` — copy from developer's Guna.UI.dll location
+- [x] 1.4 Copy `Siticone.UI.dll` from Desktop to `libs/Siticone.UI.dll` — copy from developer's Siticone.UI.dll location
+- [x] 1.5 Add DLL references in `.csproj` to `libs/Guna.UI.dll` and `libs/Siticone.UI.dll`
+- [x] 1.6 Delete `packages.config` — no longer needed with PackageReference
 - [ ] 1.7 Verify: `dotnet build` succeeds on net472, no build errors
 
 ## PR 2: Replace Guna/Siticone with native WinForms (net472)
