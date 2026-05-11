@@ -1,3 +1,17 @@
+# Release v1.1.1
+
+## What's New
+
+Optimized executable size with build trimming and compression.
+
+### Changes
+
+- **Smaller EXE**: Reduced from ~20MB to ~6-8MB using `PublishTrimmed` + `EnableCompressionInSingleFile`
+- Removed debug symbols from release build
+- Same functionality, smaller download
+
+---
+
 # Release v1.1.0
 
 ## What's New
@@ -17,16 +31,6 @@ Auto-detection of Black Desert Online game installations with multi-path support
 - **Code quality**: Zero confirmed issues after adversarial Judgment Day code review
 - **Designer compatibility**: Added `nuget.config` and `global.json` for VS 2022 WinForms designer support with .NET 8
 - Backward compatible — no changes to existing workflow
-
-### Usage
-
-1. Download `Universal Font Patcher BDO.exe` from Assets below
-2. Run on any Windows 10/11 machine
-3. Detected installations appear automatically with checkboxes
-4. Select a `.ttf` font file
-5. Check the installation(s) you want to patch
-6. Click **Patch** — applies to all checked paths
-7. Restart Black Desert Online
 
 ---
 
