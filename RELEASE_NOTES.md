@@ -2,6 +2,34 @@
 
 ## What's New
 
+Polished form redesign with improved visual layout and code quality fixes.
+
+### Changes
+
+- **Redesigned UI**: Modernized form layout (560x300), updated button colors with blue accent theme (`SystemColors.HotTrack`), improved spacing and alignment
+- **Better font validation**: Selected `.ttf` files are now validated before patching — no more copying invalid or corrupted fonts
+- **Stronger path validation**: Manual folder browsing now checks for `BlackDesertLauncher.exe`, not just a folder name match
+- **Fixed resource leaks**: All `SoundPlayer` instances properly disposed, font GDI objects reused via static field
+- **CRITICAL — Judgment Day review**: Zero confirmed CRITICAL or WARNING issues after adversarial code review
+- **Designer compatibility**: Added `nuget.config` and `global.json` for VS 2022 WinForms designer support with .NET 8
+- `gunaLabel3` nullable consistency fix
+
+### Usage
+
+1. Download `Universal Font Patcher BDO.exe` from Assets below
+2. Run on any Windows 10/11 machine
+3. Detected installations appear automatically with checkboxes
+4. Select a `.ttf` font file
+5. Check the installation(s) you want to patch
+6. Click **Patch** — applies to all checked paths
+7. Restart Black Desert Online
+
+---
+
+# Release v1.1.0 — Initial
+
+## What's New
+
 Auto-detection of Black Desert Online game installations with multi-path support.
 
 ### Changes
