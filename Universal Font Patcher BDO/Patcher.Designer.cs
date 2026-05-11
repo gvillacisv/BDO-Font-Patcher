@@ -245,6 +245,8 @@ partial class Form1
 
     }
 
+    #endregion
+
     private System.Windows.Forms.Label gunaLabel1 = null!;
     private System.Windows.Forms.Panel gunaPanel1 = null!;
     private System.Windows.Forms.Label gunaLabel2 = null!;
