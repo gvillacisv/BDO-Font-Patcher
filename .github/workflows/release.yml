@@ -31,6 +31,7 @@ jobs:
         with:
           name: Release ${{ github.ref_name }}
           body_path: RELEASE_NOTES.md
+          draft: false
           files: |
             Universal Font Patcher BDO/bin/Release/net8.0-windows/win-x64/publish/Universal Font Patcher BDO.exe
           fail_on_unmatched_files: true
